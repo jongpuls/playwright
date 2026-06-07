@@ -1,8 +1,60 @@
+# --- OS 전용 파일 ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Playwright
+# --- IDE 및 에디터 ---
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# --- 빌드 결과물 및 의존성 ---
 node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
+jspm_packages/
+web_packages/
+vendor/
+dist/
+build/
+out/
+target/
+bin/
+obj/
+
+# --- 환경 변수 및 보안 비밀번호 (매우 중요) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+*.cert
+
+# --- 로그 및 임시 파일 ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+.stylelintcache
+.cache/
+tmp/
+
+# --- Playwright 특정 파일 ---
+test-results/
+playwright-report/
+blob-report/
+playwright/.local-browsers/
+*.stackdump
