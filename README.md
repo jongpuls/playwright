@@ -14,6 +14,7 @@
 
 ```bash
 npm install
+npm install @playwright/test
 npx playwright install
 ```
 
