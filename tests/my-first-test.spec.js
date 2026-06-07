@@ -1,28 +1,29 @@
-const { test } = require('@playwright/test');
-const fs = require('fs'); // 파일 저장을 위한 Node.js 기본 모듈 불러오기
+import { test, expect } from '@playwright/test';
 
-test('책 데이터를 수집하여 CSV 파일로 저장하기', async ({ page }) => {
-  await page.goto('https://books.toscrape.com/');
+// 테스트 1: 로그인 성공 케이스
+test('올바른 계정으로 로그인 성공 확인하기', async ({ page }) => {
+  await page.goto('https://the-internet.herokuapp.com/login');
+  await page.fill('#username', 'tomsmith');
+  await page.fill('#password', 'SuperSecretPassword!');
+  await page.click('button[type="submit"]');
 
-  const books = page.locator('.product_pod');
-  const bookCount = await books.count();
+  const alertMessage = page.locator('#flash');
+  await expect(alertMessage).toContainText('You logged into a secure area!');
+});
 
-  // 1. CSV 파일의 첫 번째 줄(헤더) 준비
-  let csvContent = '제목,가격\n';
+// 테스트 2: 로그인 실패 케이스 (비밀번호 틀림)
+test('잘못된 비밀번호 입력 시 에러 메시지 확인하기', async ({ page }) => {
+  // 1. 로그인 페이지로 이동
+  await page.goto('https://the-internet.herokuapp.com/login');
+  
+  // 2. 아이디는 맞게, 비밀번호는 틀리게 입력
+  await page.fill('#username', 'tomsmith');
+  await page.fill('#password', 'WrongPassword!');
+  
+  // 3. 로그인 버튼 클릭
+  await page.click('button[type="submit"]');
 
-  for (let i = 0; i < bookCount; i++) {
-    const book = books.nth(i);
-    const title = await book.locator('h3 a').getAttribute('title');
-    const price = await book.locator('.price_color').innerText();
-
-    // 2. 제목에 쉼표가 있을 때를 대비해 큰따옴표로 감싸기
-    const safeTitle = `"${title.replace(/"/g, '""')}"`; 
-    
-    // 3. 한 줄씩 누적하기
-    csvContent += `${safeTitle},${price}\n`;
-  }
-
-  // 4. 프로젝트 폴더에 파일 쓰기 (파일명: result.csv)
-  fs.writeFileSync('result.csv', csvContent, 'utf-8');
-  console.log('\n🎉 result.csv 파일로 저장이 완료되었습니다!');
+  // 4. 에러 메시지 검증
+  const alertMessage = page.locator('#flash');
+  await expect(alertMessage).toContainText('Your password is invalid!');
 });
